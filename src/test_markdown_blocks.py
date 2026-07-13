@@ -1,5 +1,5 @@
 import unittest
-from markdown_blocks import markdown_to_blocks
+from markdown_blocks import markdown_to_blocks, block_to_block_type, BlockType
 
 class TestMarkdownBlocks(unittest.TestCase):
     def test_markdown_to_blocks(self):
@@ -103,4 +103,73 @@ This is the same paragraph on a new line
         blocks = markdown_to_blocks(md)
         self.assertEqual(blocks, [''])
     
+class TestMarkdownBlocks(unittest.TestCase):
+    def test_block_to_block_type_paragraph(self):
+        block = "sdfhsfhdsffhsdffhsdfhsd"
+        block_type = block_to_block_type(block)
+        self.assertEqual(block_type, BlockType.PARAGRAPH)
+
+    def test_block_to_block_type_headings_1(self):
+        block = "# Daily Journal"
+        block_type = block_to_block_type(block)
+        self.assertEqual(block_type, BlockType.HEADING)
     
+    def test_block_to_block_type_headings_2(self):
+        block = "## July"
+        block_type = block_to_block_type(block)
+        self.assertEqual(block_type, BlockType.HEADING)
+
+    def test_block_to_block_type_headings_3(self):
+        block = "### July 12 2026"
+        block_type = block_to_block_type(block)
+        self.assertEqual(block_type, BlockType.HEADING)
+    
+    def test_block_to_block_type_headings_4(self):
+        block = "#### heading"
+        block_type = block_to_block_type(block)
+        self.assertEqual(block_type, BlockType.HEADING)
+    
+    def test_block_to_block_type_headings_5(self):
+        block = "##### heading"
+        block_type = block_to_block_type(block)
+        self.assertEqual(block_type, BlockType.HEADING)
+
+    def test_block_to_block_type_headings_6(self):
+        block = "###### heading"
+        block_type = block_to_block_type(block)
+        self.assertEqual(block_type, BlockType.HEADING)
+    
+    def test_block_to_block_type_code(self):
+        block = "```\nprint('hello world')\n```"
+        block_type = block_to_block_type(block)
+        self.assertEqual(block_type, BlockType.CODE)
+
+    def test_block_to_block_type_quote(self):
+        block = ">quote"
+        block_type = block_to_block_type(block)
+        self.assertEqual(block_type, BlockType.QUOTE)
+    
+    def test_block_to_block_type_quote_2(self):
+        block = "> quote"
+        block_type = block_to_block_type(block)
+        self.assertEqual(block_type, BlockType.QUOTE)
+    
+    def test_block_to_block_type_unordered_list(self):
+        block = "- item one"
+        block_type = block_to_block_type(block)
+        self.assertEqual(block_type, BlockType.UNORDERED_LIST)
+    
+    def test_block_to_block_type_unordered_list_2(self):
+        block = "- item one\n- item two\n- item three"
+        block_type = block_to_block_type(block)
+        self.assertEqual(block_type, BlockType.UNORDERED_LIST)
+    
+    def test_block_to_block_type_ordered_list(self):
+        block = "1. item one"
+        block_type = block_to_block_type(block)
+        self.assertEqual(block_type, BlockType.ORDERED_LIST)
+    
+    def test_block_to_block_type_ordered_list_2(self):
+        block = "1. item one\n2. item two\n3. item three"
+        block_type = block_to_block_type(block)
+        self.assertEqual(block_type, BlockType.ORDERED_LIST)
