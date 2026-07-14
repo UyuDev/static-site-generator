@@ -1,5 +1,5 @@
 import unittest
-from markdown_blocks import markdown_to_blocks, block_to_block_type, BlockType, markdown_to_html_node, blocks_to_children, text_to_children, block_to_clean_text, block_to_html_node, block_to_heading, code_to_html_node
+from markdown_blocks import markdown_to_blocks, block_to_block_type, BlockType, markdown_to_html_node, blocks_to_children, text_to_children, block_to_clean_text, block_to_heading, code_to_html_node
 from textnode import TextNode, TextType, text_node_to_html_node
 from htmlnode import HTMLNode, ParentNode, LeafNode
 from inline_markdown import text_to_textnodes
@@ -288,3 +288,49 @@ class TestTextToChildren(unittest.TestCase):
             self.assertEqual(new_nodes[i].tag, target[i].tag)
             self.assertEqual(new_nodes[i].value, target[i].value)
             self.assertEqual(new_nodes[i].props, target[i].props)
+
+class TestCodeToHtmlNode(unittest.TestCase):
+    def test_code_to_html_node(self):
+        block = """
+```
+This is text that _should_ remain
+the **same** even with inline stuff
+```
+"""
+        parent_node = code_to_html_node(block)
+        target = ParentNode("pre", [LeafNode("code", "This is text that _should_ remain\nthe **same** even with inline stuff\n")])
+        parent_child = parent_node.children[0]
+        target_child = target.children[0]
+        self.assertEqual(parent_node.tag, target.tag)
+        self.assertEqual(parent_child.tag, target_child.tag)
+        self.assertEqual(parent_child.value, target_child.value)
+    
+    def test_code_to_html_node_2(self):
+        block = """
+```python
+This is text that _should_ remain
+the **same** even with inline stuff
+```
+"""
+        parent_node = code_to_html_node(block)
+        target = ParentNode("pre", [LeafNode("code", "This is text that _should_ remain\nthe **same** even with inline stuff\n")])
+        parent_child = parent_node.children[0]
+        target_child = target.children[0]
+        self.assertEqual(parent_node.tag, target.tag)
+        self.assertEqual(parent_child.tag, target_child.tag)
+        self.assertEqual(parent_child.value, target_child.value)
+    
+    def test_code_to_html_node_3(self):
+        block = """
+```bash
+This is text that _should_ remain
+the **same** even with inline stuff
+```
+"""
+        parent_node = code_to_html_node(block)
+        target = ParentNode("pre", [LeafNode("code", "This is text that _should_ remain\nthe **same** even with inline stuff\n")])
+        parent_child = parent_node.children[0]
+        target_child = target.children[0]
+        self.assertEqual(parent_node.tag, target.tag)
+        self.assertEqual(parent_child.tag, target_child.tag)
+        self.assertEqual(parent_child.value, target_child.value)

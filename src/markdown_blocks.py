@@ -54,13 +54,19 @@ def block_to_block_type(block: str) -> BlockType:
         return BlockType.ORDERED_LIST
     return BlockType.PARAGRAPH
 
-def code_to_html_node(block: str) -> LeafNode:
-    return
+def code_to_html_node(block: str) -> ParentNode:
+    while block[0] == "\n":
+        block = block.removeprefix("\n")
+    index = block.find("\n")
+    if block[-1] == "\n":
+        block = block.removesuffix("\n")
+    code_text = block[index + 1: -3]
+    node = TextNode(code_text, TextType.CODE)
+    child = text_node_to_html_node(node)
+    parent = ParentNode("pre", [child])
+    return parent
 
 def block_to_heading(block: str) -> str:
-    return
-
-def block_to_html_node(tag: str, children: list[HTMLNode]) -> HTMLNode:
     return
 
 
@@ -86,9 +92,9 @@ def blocks_to_children(blocks: list[str]) -> list[ParentNode]:
             for line in split_lines:
                 new_text = block_to_clean_text(line)
                 children = text_to_children(new_text)
-                new_node = block_to_html_node("li", children)
+                new_node = ParentNode("li", children)
                 list_children.append(new_node)
-            unordered_list_node = block_to_html_node("ul", list_children)
+            unordered_list_node = ParentNode("ul", list_children)
             parent_nodes.append(unordered_list_node)
         elif block_type == BlockType.ORDERED_LIST:
             split_lines = block.split("\n")
@@ -96,9 +102,9 @@ def blocks_to_children(blocks: list[str]) -> list[ParentNode]:
             for line in split_lines:
                 new_text = block_to_clean_text(line)
                 children = text_to_children(new_text)
-                new_node = block_to_html_node("li", children)
+                new_node = ParentNode("li", children)
                 list_children.append(new_node)
-            ordered_list_node = block_to_html_node("ol", list_children)
+            ordered_list_node = ParentNode("ol", list_children)
             parent_nodes.append(ordered_list_node)
         elif block_type == BlockType.CODE:
             code_node = code_to_html_node(block)
@@ -107,14 +113,14 @@ def blocks_to_children(blocks: list[str]) -> list[ParentNode]:
             new_text = block_to_clean_text(block)
             children = text_to_children(new_text)
             if block_type == BlockType.QUOTE:
-                new_node = block_to_html_node("blockquote", children)
+                new_node = ParentNode("blockquote", children)
                 parent_nodes.append(new_node)
             elif block_type == BlockType.HEADING:
                 tag = block_to_heading(block)
-                new_node = block_to_html_node(tag, children)
+                new_node = ParentNode(tag, children)
                 parent_nodes.append(new_node)
             elif block_type == BlockType.PARAGRAPH:
-                new_node = block_to_html_node("p", children)
+                new_node = ParentNode("p", children)
                 parent_nodes.append(new_node)
     return parent_nodes
 
