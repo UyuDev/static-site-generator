@@ -45,6 +45,3 @@ def text_node_to_html_node(text_node: TextNode) -> LeafNode:
             return node 
         case _:
             raise Exception("invalid node type")
-
-def code_to_html_node(text_node: TextNode) -> LeafNode:
-    return
