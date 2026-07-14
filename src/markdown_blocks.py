@@ -74,8 +74,23 @@ def block_to_heading(block: str) -> str:
 
 
 def block_to_clean_text(block: str) -> str:
-    return
-
+    if block[0].isdigit() and ". " in block[:6]:
+        if block[1].isdigit():
+            if block[2].isdigit():
+                if block[3].isdigit():
+                    return block[6:]
+                return block[5:]
+            return block[4:]
+        return block[3:]
+    not_list = block.removeprefix("- ")
+    not_quote = not_list.removeprefix("> ")
+    not_heading1 = not_quote.removeprefix("# ")
+    not_heading2 = not_heading1.removeprefix("## ")
+    not_heading3 = not_heading2.removeprefix("### ")
+    not_heading4 = not_heading3.removeprefix("#### ")
+    not_heading5 = not_heading4.removeprefix("##### ")
+    not_heading6 = not_heading5.removeprefix("###### ")
+    return not_heading6
 
 def text_to_children(text: str) -> list[HTMLNode]:
     text_nodes = text_to_textnodes(text)

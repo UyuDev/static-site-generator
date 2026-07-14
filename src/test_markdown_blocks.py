@@ -345,3 +345,55 @@ class TestBlockToHeading(unittest.TestCase):
         block = "###### heading"
         tag = block_to_heading(block)
         self.assertEqual(tag, "h6")
+
+class TestBlockToCleanText(unittest.TestCase):
+    def test_block_to_clean_text_heading1(self):
+        block = "# heading"
+        new_text = block_to_clean_text(block)
+        self.assertEqual(new_text, "heading")
+
+    def test_block_to_clean_text_heading6(self):
+        block = "###### heading"
+        new_text = block_to_clean_text(block)
+        self.assertEqual(new_text, "heading")
+
+    def test_block_to_clean_text_ordered_list_1(self):
+        block = "1. Item 1"
+        new_text = block_to_clean_text(block)
+        self.assertEqual(new_text, "Item 1")
+    
+    def test_block_to_clean_text_ordered_list_10(self):
+        block = "10. Item 10"
+        new_text = block_to_clean_text(block)
+        self.assertEqual(new_text, "Item 10")
+
+    def test_block_to_clean_text_ordered_list_100(self):
+        block = "100. Item 100"
+        new_text = block_to_clean_text(block)
+        self.assertEqual(new_text, "Item 100")
+
+    def test_block_to_clean_text_ordered_list_1000(self):
+        block = "1000. Item 1000"
+        new_text = block_to_clean_text(block)
+        self.assertEqual(new_text, "Item 1000")
+
+    def test_block_to_clean_text_unordered_list(self):
+        block = "- Item 1"
+        new_text = block_to_clean_text(block)
+        self.assertEqual(new_text, "Item 1")
+
+    def test_block_to_clean_text_quote(self):
+        block = "> This is a quote."
+        new_text = block_to_clean_text(block)
+        self.assertEqual(new_text, "This is a quote.")
+    
+    def test_block_to_clean_text_quote_2(self):
+        block = "> 123This is a quote."
+        new_text = block_to_clean_text(block)
+        self.assertEqual(new_text, "123This is a quote.")
+
+    def test_block_to_clean_text_paragraph(self):
+        block = "This is a paragraph of text."
+        new_text = block_to_clean_text(block)
+        self.assertEqual(new_text, "This is a paragraph of text.")
+
