@@ -67,7 +67,10 @@ def code_to_html_node(block: str) -> ParentNode:
     return parent
 
 def block_to_heading(block: str) -> str:
-    return
+    count = 0
+    while block[count] == "#":
+        count += 1
+    return f"h{count}"
 
 
 def block_to_clean_text(block: str) -> str:

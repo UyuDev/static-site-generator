@@ -334,3 +334,14 @@ the **same** even with inline stuff
         self.assertEqual(parent_node.tag, target.tag)
         self.assertEqual(parent_child.tag, target_child.tag)
         self.assertEqual(parent_child.value, target_child.value)
+
+class TestBlockToHeading(unittest.TestCase):
+    def test_block_to_heading_1(self):
+        block = "# heading"
+        tag = block_to_heading(block)
+        self.assertEqual(tag, "h1")
+
+    def test_block_to_heading_6(self):
+        block = "###### heading"
+        tag = block_to_heading(block)
+        self.assertEqual(tag, "h6")
