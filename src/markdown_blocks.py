@@ -1,4 +1,7 @@
 from enum import Enum
+from textnode import TextNode, text_node_to_html_node, code_to_html_node, TextType
+from htmlnode import HTMLNode, ParentNode, LeafNode
+from inline_markdown import text_to_textnodes
 
 def markdown_to_blocks(markdown: str) -> list[str]:
     split_text = markdown.split("\n\n")
@@ -50,3 +53,26 @@ def block_to_block_type(block: str) -> BlockType:
                 return BlockType.PARAGRAPH
         return BlockType.ORDERED_LIST
     return BlockType.PARAGRAPH
+
+def block_to_clean_text(block: str) -> str:
+    return
+
+
+def text_to_children(text: str) -> list[HTMLNode]:
+    return
+
+
+def block_type_to_html_node(tag: str, children: list[HTMLNode]) -> ParentNode:
+    return
+
+
+def blocks_to_children(blocks: list[str]) -> list[ParentNode]:
+    return
+
+
+def markdown_to_html_node(markdown: str) -> HTMLNode:
+    blocks = markdown_to_blocks(markdown)
+    children = blocks_to_children(blocks)
+    node = ParentNode("div", children, None)
+    return node
+    
