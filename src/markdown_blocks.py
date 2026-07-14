@@ -7,9 +7,10 @@ def markdown_to_blocks(markdown: str) -> list[str]:
     split_text = markdown.split("\n\n")
     final_list = []
     for text in split_text:
+        text = text.strip()
         if text == "":
             continue
-        final_list.append(text.strip())
+        final_list.append(text)
     return final_list
 
 class BlockType(Enum):
@@ -61,6 +62,11 @@ def code_to_html_node(block: str) -> ParentNode:
     if block[-1] == "\n":
         block = block.removesuffix("\n")
     code_text = block[index + 1: -3]
+    split_text = code_text.split("\n")
+    new_text = []
+    for text in split_text:
+        new_text.append(text.strip())
+    code_text = "\n".join(new_text)
     node = TextNode(code_text, TextType.CODE)
     child = text_node_to_html_node(node)
     parent = ParentNode("pre", [child])
@@ -74,6 +80,9 @@ def block_to_heading(block: str) -> str:
 
 
 def block_to_clean_text(block: str) -> str:
+    if block == "":
+        return block
+    block = block.strip()
     if block[0].isdigit() and ". " in block[:6]:
         if block[1].isdigit():
             if block[2].isdigit():
@@ -90,7 +99,12 @@ def block_to_clean_text(block: str) -> str:
     not_heading4 = not_heading3.removeprefix("#### ")
     not_heading5 = not_heading4.removeprefix("##### ")
     not_heading6 = not_heading5.removeprefix("###### ")
-    return not_heading6
+    split_text = not_heading6.split("\n")
+    new_text = []
+    for text in split_text:
+        new_text.append(text.strip())
+    replace_newlines = " ".join(new_text)
+    return replace_newlines
 
 def text_to_children(text: str) -> list[HTMLNode]:
     text_nodes = text_to_textnodes(text)
