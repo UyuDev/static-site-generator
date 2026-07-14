@@ -57,19 +57,24 @@ def block_to_block_type(block: str) -> BlockType:
 def code_to_html_node(block: str) -> LeafNode:
     return
 
+def block_to_heading(block: str) -> str:
+    return
+
+def block_to_html_node(tag: str, children: list[HTMLNode]) -> HTMLNode:
+    return
+
+
 def block_to_clean_text(block: str) -> str:
     return
 
 
 def text_to_children(text: str) -> list[HTMLNode]:
-    return
-
-
-def block_to_html_node(tag: str, children: list[HTMLNode]) -> HTMLNode:
-    return
-
-def block_to_heading(block: str) -> str:
-    return
+    text_nodes = text_to_textnodes(text)
+    final_list = []
+    for node in text_nodes:
+        leaf_node = text_node_to_html_node(node)
+        final_list.append(leaf_node)
+    return final_list
 
 def blocks_to_children(blocks: list[str]) -> list[ParentNode]:
     parent_nodes = []
