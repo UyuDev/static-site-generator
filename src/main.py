@@ -1,8 +1,10 @@
 from textnode import TextNode, TextType
+from copy_static import copy_static
 
 def main():
-    new_text_node = TextNode("sample text", TextType.TEXT)
-    print(new_text_node)
+    source_dir = "static"
+    target_path = "public"
+    copy_static(source_dir, target_path)
     
 
 

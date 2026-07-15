@@ -162,4 +162,3 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
     children = blocks_to_children(blocks)
     node = ParentNode("div", children, None)
     return node
-    
