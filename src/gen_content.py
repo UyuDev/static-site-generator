@@ -23,3 +23,29 @@ def check_directories(target_path: str):
     parent_dir = os.path.dirname(target_path)
     if parent_dir != "":
         os.makedirs(parent_dir, exist_ok=True)
+
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    print(f"Checking items in directory: {dir_path_content}")
+    for item_name in os.listdir(dir_path_content):
+        print(f"Checking item: {item_name}")
+        full_path = os.path.join(dir_path_content, item_name)
+        print(f"Full path: {full_path}")
+        print(f"Checking if {full_path} is a file: {os.path.isfile(full_path)}")
+        if os.path.isfile(full_path):
+            print(f"Checking if {item_name} is a .md file")
+            new_item_name = item_name
+            if ".md" in item_name:
+                print(f"Changing from .md to .html file")
+                new_item_name = new_item_name.replace(".md", ".html")
+            print(f"Generating a new file for {item_name} in directory:{dest_dir_path}")
+            new_dest_path = os.path.join(dest_dir_path, new_item_name)
+            generate_page(full_path, template_path, new_dest_path)
+        print(f"Checking if {full_path} is a directory: {os.path.isdir(full_path)}")
+        if os.path.isdir(full_path):
+            new_dest_path = os.path.join(dest_dir_path, item_name)
+            print(f"New destination path: {new_dest_path}")
+            os.mkdir(new_dest_path)
+            print(f"Making new directory: {new_dest_path}")
+            print(f"Recursively calling generate_pages_recursive with source: {full_path} and target: {new_dest_path}")
+            generate_pages_recursive(full_path, template_path, new_dest_path)
