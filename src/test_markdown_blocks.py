@@ -1,5 +1,5 @@
 import unittest
-from markdown_blocks import markdown_to_blocks, block_to_block_type, BlockType, markdown_to_html_node, blocks_to_children, text_to_children, block_to_clean_text, block_to_heading, code_to_html_node
+from markdown_blocks import markdown_to_blocks, block_to_block_type, BlockType, markdown_to_html_node, blocks_to_children, text_to_children, block_to_clean_text, block_to_heading, code_to_html_node, check_heading, extract_title
 from textnode import TextNode, TextType, text_node_to_html_node
 from htmlnode import HTMLNode, ParentNode, LeafNode
 from inline_markdown import text_to_textnodes
@@ -435,3 +435,97 @@ class TestMarkdownToHtmlNode(unittest.TestCase):
             html,
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
         )
+
+class TestCheckHeading(unittest.TestCase):
+    def test_check_heading_1(self):
+        md = "# heading"
+        result = check_heading(md)
+        self.assertEqual(result, True)
+
+    def test_check_heading_2(self):
+        md = "## heading"
+        result = check_heading(md)
+        self.assertEqual(result, False)
+
+class TestExtractTitle(unittest.TestCase):
+    def test_extract_title_1(self):
+        md = """
+# Tolkien Fan Club
+
+![JRR Tolkien sitting](/images/tolkien.png)
+
+Here's the deal, **I like Tolkien**.
+
+> "I am in fact a Hobbit in all but size."
+>
+> -- J.R.R. Tolkien
+"""
+        result = extract_title(md)
+        self.assertEqual(result, "Tolkien Fan Club")
+
+    def test_extract_title_2(self):
+        md = """
+## Tolkien Fan Club
+
+![JRR Tolkien sitting](/images/tolkien.png)
+
+Here's the deal, **I like Tolkien**.
+
+> "I am in fact a Hobbit in all but size."
+>
+> -- J.R.R. Tolkien
+"""
+        with self.assertRaises(Exception):
+            extract_title(md)
+
+    def test_extract_title_after_content(self):
+        md = """
+example text 123
+ 
+# Tolkien Fan Club
+
+![JRR Tolkien sitting](/images/tolkien.png)
+
+Here's the deal, **I like Tolkien**.
+
+> "I am in fact a Hobbit in all but size."
+>
+> -- J.R.R. Tolkien
+"""
+        result = extract_title(md)
+        self.assertEqual(result, "Tolkien Fan Club")
+
+    def test_extract_title_whitespace(self):
+        md = """
+#     Tolkien Fan Club
+
+![JRR Tolkien sitting](/images/tolkien.png)
+
+Here's the deal, **I like Tolkien**.
+
+> "I am in fact a Hobbit in all but size."
+>
+> -- J.R.R. Tolkien
+"""
+        result = extract_title(md)
+        self.assertEqual(result, "Tolkien Fan Club")
+
+
+    def test_extract_title_multiple_headings(self):
+        md = """
+#     Tolkien Fan Club
+
+#     random title
+
+#     another title
+
+![JRR Tolkien sitting](/images/tolkien.png)
+
+Here's the deal, **I like Tolkien**.
+
+> "I am in fact a Hobbit in all but size."
+>
+> -- J.R.R. Tolkien
+"""
+        result = extract_title(md)
+        self.assertEqual(result, "Tolkien Fan Club")

@@ -162,3 +162,19 @@ def markdown_to_html_node(markdown: str) -> HTMLNode:
     children = blocks_to_children(blocks)
     node = ParentNode("div", children, None)
     return node
+
+
+def check_heading(block: str) -> bool:
+    if block.startswith("#"):
+        i = 1
+        while i < len(block) and block[i] == "#":
+            i += 1
+        if i == 1:
+            return True
+        return False
+
+def extract_title(markdown: str) -> str:
+    for block in markdown.splitlines():
+        if block_to_block_type(block) == BlockType.HEADING and check_heading(block) == True:
+            return block_to_clean_text(block)
+    raise Exception("No heading found")
