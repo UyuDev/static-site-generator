@@ -8,12 +8,11 @@ def main():
     else:
         basepath = sys.argv[1]
     source_dir = "static"
-    target_path = "public"
+    output_dir = "docs"
     template = "template.html"
     origin_dir = "content"
-    target_dir = "public"
-    copy_static(source_dir, target_path)
-    generate_pages_recursive(origin_dir, template, target_dir, basepath)
+    copy_static(source_dir, output_dir)
+    generate_pages_recursive(origin_dir, template, output_dir, basepath)
 
 
 if __name__ == "__main__":
